@@ -157,11 +157,6 @@ namespace K8055_TESTE
             task2.Start();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            K8055.OpenDevice(0); //Open communication with K8055 that has the device address 0
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             K8055.CloseDevice(); //Closes communication with the K8055
@@ -177,9 +172,49 @@ namespace K8055_TESTE
             MessageBox.Show(K8055.ReadDigitalChannel(1).ToString());
         }
 
-        private void button5_Click(object sender, EventArgs e)
+
+        private void groupBox2_Enter(object sender, EventArgs e)
         {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            K8055.OpenDevice(0);
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show("All blink OR restart with default to fase 1");
             isInMaintenanceMode = !isInMaintenanceMode;
+        }
+
+        private void p1_Click(object sender, EventArgs e)
+        {
+            // should turn off
+            // s1.1, s1.2, s2.1, s3
+            MessageBox.Show("Off: s1.1, s1.2, s2.1, s3 ");
+        }
+
+        private void p2_Click(object sender, EventArgs e)
+        {
+            // should turn off
+            // s3, s2.1, s2.2, s1.2
+            MessageBox.Show("Off: s3, s2.1, s2.2, s1.2");
+        }
+
+        private void p3_Click(object sender, EventArgs e)
+        {
+        // should turn off
+        // s3, s2.2, s1.
+        MessageBox.Show("Off: s3, s2.2, s1.1");
+        }
+
+        private void d1_Click(object sender, EventArgs e)
+        {
+        // should activate fase 3
+        // Off: S1.2, S2.1, S2.2
+        MessageBox.Show("should activate fase 3.\n Off:  S1.2, S2.1, S2.2");
         }
     }
 
