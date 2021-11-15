@@ -193,21 +193,21 @@ namespace K8055_TESTE
         {
             // should turn off
             // s1.1, s1.2, s2.1, s3
-            MessageBox.Show("Off: s1.1, s1.2, s2.1, s3 ");
+            MessageBox.Show("On: P1 \n Off: s1.1, s1.2, s2.1, s3 ");
         }
 
         private void p2_Click(object sender, EventArgs e)
         {
             // should turn off
             // s3, s2.1, s2.2, s1.2
-            MessageBox.Show("Off: s3, s2.1, s2.2, s1.2");
+            MessageBox.Show("On: p1 \n Off: s3, s2.1, s2.2, s1.2");
         }
 
         private void p3_Click(object sender, EventArgs e)
         {
         // should turn off
         // s3, s2.2, s1.
-        MessageBox.Show("Off: s3, s2.2, s1.1");
+        MessageBox.Show("On P3 \n Off: s3, s2.2, s1.1");
         }
 
         private void d1_Click(object sender, EventArgs e)

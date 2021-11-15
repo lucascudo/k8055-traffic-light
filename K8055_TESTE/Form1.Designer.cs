@@ -177,11 +177,11 @@
             // 
             // d1
             // 
-            this.d1.Location = new System.Drawing.Point(1195, 546);
+            this.d1.Location = new System.Drawing.Point(1324, 622);
             this.d1.Name = "d1";
-            this.d1.Size = new System.Drawing.Size(58, 86);
+            this.d1.Size = new System.Drawing.Size(70, 38);
             this.d1.TabIndex = 11;
-            this.d1.Text = "Car Sensor";
+            this.d1.Text = "Sensor";
             this.d1.UseVisualStyleBackColor = true;
             this.d1.Click += new System.EventHandler(this.d1_Click);
             // 
@@ -384,7 +384,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(30, 194);
+            this.pictureBox1.Location = new System.Drawing.Point(42, 196);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1695, 762);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -395,7 +395,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1764, 1072);
+            this.ClientSize = new System.Drawing.Size(1764, 1055);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
