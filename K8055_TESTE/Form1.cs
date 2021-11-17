@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 using System.Runtime.InteropServices;
 
@@ -77,51 +78,100 @@ namespace K8055_TESTE
             public static extern void SetCounterDebounceTime(int CounterNr, int DebounceTime);
         }
 
-        private bool isInMaintenanceMode = false;
-        private bool isOpenForCars = false;
-        private bool isOpenForPedestrians = false;
+        private bool isInMaintenanceMode = true;
         private bool isWarning = false;
+        private bool yinyang = false;
+        private bool D1 = false;
         private int timer = 10000;
+        private int state = 0;
 
-        private const int ARED = 1;
-        private const int AYELLOW = 2;
-        private const int AGREEN = 3;
-
-        private const int BRED = 4;
-        private const int BYELLOW = 5;
-        private const int BGREEN = 6;
-
-        private const int DRED = 7;
-        private const int DGREEN = 8;
+        private const int S11 = 1;
+        private const int S12 = 2;
+        private const int S21 = 3;
+        private const int S22 = 4;
+        private const int S3 = 5;
+        private const int P1 = 6;
+        private const int P2 = 7;
+        private const int P3 = 8;
+        private const bool P1Pressed = false;
+        private const bool P2Pressed = false;
+        private const bool P3Pressed = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            K8055.OpenDevice(0);
+            
             Task task1 = new Task(delegate
             {
+                int[] allLights = new int[] { S11, S12, S21, S22, S3, P1, P2, P3 };
                 while (true)
                 {
-                    K8055.ClearAllDigital();
+                    state1.BackColor = Color.Transparent;
+                    state2.BackColor = Color.Transparent;
+                    state3.BackColor = Color.Transparent;
+                    maintanceModePanel.BackColor = isInMaintenanceMode ? Color.White : Color.Transparent;
+                    foreach (int light in allLights)
+                    {
+                        K8055.SetDigitalChannel(light);
+                    }
+                    if (state == 1)
+                    {
+                        state1.BackColor = Color.White;
+                        K8055.ClearDigitalChannel(S12);
+                        K8055.ClearDigitalChannel(S21);
+                        if (yinyang)
+                        {
+                            K8055.SetDigitalChannel(S11);
+                            K8055.SetDigitalChannel(P3);
+                        }
+                        else
+                        {
+                            K8055.ClearDigitalChannel(S11);
+                            K8055.ClearDigitalChannel(P3);
+                            if (isWarning)
+                            {
+                                K8055.SetDigitalChannel(S12);
+                                K8055.SetDigitalChannel(S21);
+                            }
+                        }
+                    }
+                    else if (state == 2)
+                    {
+                        state2.BackColor = Color.White;
+                        K8055.ClearDigitalChannel(S21);
+                        if (yinyang)
+                        {
+                            K8055.SetDigitalChannel(S22);
+                            K8055.SetDigitalChannel(P3);
+                        }
+                        else
+                        {
+                            K8055.ClearDigitalChannel(S22);
+                            K8055.ClearDigitalChannel(P3);
+                            if (isWarning)
+                            {
+                                K8055.SetDigitalChannel(S21);
+                            }
+                        }
+                    }
+                    else if (state == 3)
+                    {
+                        state3.BackColor = Color.White;
+                        K8055.ClearDigitalChannel(S11);
+                        K8055.ClearDigitalChannel(S3);
+                        if (isWarning && !yinyang)
+                        {
+                            K8055.SetDigitalChannel(S11);
+                            K8055.SetDigitalChannel(S3);
+                        }
+                    }
+                    System.Threading.Thread.Sleep(333);
                     if (isInMaintenanceMode)
                     {
-                        System.Threading.Thread.Sleep(500);
-                        K8055.SetDigitalChannel(AYELLOW);
-                        K8055.SetDigitalChannel(BYELLOW);
-                        System.Threading.Thread.Sleep(500);
-                        continue;
+                        K8055.ClearAllDigital();
+                        System.Threading.Thread.Sleep(333);
                     }
-                    K8055.SetDigitalChannel(ARED);
-                    K8055.SetDigitalChannel(BRED);
-                    if (isOpenForCars)
-                    {
-                        K8055.ClearDigitalChannel(BRED);
-                        K8055.SetDigitalChannel(isWarning ? BYELLOW : BGREEN);
-                    }
-                    else if (isOpenForPedestrians)
-                    {
-                        K8055.ClearDigitalChannel(ARED);
-                        K8055.SetDigitalChannel(isWarning ? AYELLOW : AGREEN);
-                    }
-                    System.Threading.Thread.Sleep(500);
+                    yinyang = !yinyang;
                 }
             });
             task1.Start();
@@ -129,29 +179,29 @@ namespace K8055_TESTE
             {
                 while (true)
                 {
-                    isOpenForCars = false;
-                    isOpenForPedestrians = false;
                     isWarning = false;
                     if (isInMaintenanceMode)
                     {
+                        state = 0;
                         continue;
                     }
-
-                    isOpenForCars = true;
-                    System.Threading.Thread.Sleep((timer / 10) * 9);
+                    state++;
+                    if ((state == 3 && !D1) || state > 3)
+                    {
+                        state = 1;
+                        D1 = false;
+                    }
+                    for (int i = 0; i < 9; i++)
+                    {
+                        if (isInMaintenanceMode)
+                        {
+                            i = 8;
+                        }
+                        System.Threading.Thread.Sleep(timer / 10);
+                    }
                     isWarning = true;
-                    System.Threading.Thread.Sleep((timer / 10) * 1);
+                    System.Threading.Thread.Sleep(timer / 10);
                     isWarning = false;
-                    isOpenForCars = false;
-                    System.Threading.Thread.Sleep(4000);
-
-                    isOpenForPedestrians = true;
-                    System.Threading.Thread.Sleep(((timer / 10) * 9) / 2);
-                    isWarning = true;
-                    System.Threading.Thread.Sleep(((timer / 10) * 1) / 2);
-                    isWarning = false;
-                    isOpenForPedestrians = false;
-                    System.Threading.Thread.Sleep(4000);
                 }
             });
             task2.Start();
@@ -185,7 +235,6 @@ namespace K8055_TESTE
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show("All blink OR restart with default to fase 1");
             isInMaintenanceMode = !isInMaintenanceMode;
         }
 
@@ -212,9 +261,12 @@ namespace K8055_TESTE
 
         private void d1_Click(object sender, EventArgs e)
         {
-        // should activate fase 3
-        // Off: S1.2, S2.1, S2.2
-        MessageBox.Show("should activate fase 3.\n Off:  S1.2, S2.1, S2.2");
+            D1 = true;
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 
