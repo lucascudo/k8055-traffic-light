@@ -79,11 +79,16 @@ namespace K8055_TESTE
         }
 
         private bool isInMaintenanceMode = true;
-        private bool isWarning = false;
         private bool yinyang = false;
         private bool D1 = false;
-        private int timer = 10000;
+        private int timer = 20000;
         private int state = 0;
+        private bool P1Pressed = false;
+        private bool P2Pressed = false;
+        private bool P3Pressed = false;
+        private DateTime P1PressedAt;
+        private DateTime P2PressedAt;
+        private DateTime P3PressedAt;
 
         private const int S11 = 1;
         private const int S12 = 2;
@@ -93,10 +98,7 @@ namespace K8055_TESTE
         private const int P1 = 6;
         private const int P2 = 7;
         private const int P3 = 8;
-        private const bool P1Pressed = false;
-        private const bool P2Pressed = false;
-        private const bool P3Pressed = false;
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             K8055.OpenDevice(0);
@@ -110,15 +112,22 @@ namespace K8055_TESTE
                     state2.BackColor = Color.Transparent;
                     state3.BackColor = Color.Transparent;
                     maintanceModePanel.BackColor = isInMaintenanceMode ? Color.White : Color.Transparent;
-                    foreach (int light in allLights)
+                    if (isInMaintenanceMode)
                     {
-                        K8055.SetDigitalChannel(light);
+                        foreach (int light in allLights)
+                        {
+                            K8055.SetDigitalChannel(light);
+                        }
                     }
                     if (state == 1)
                     {
                         state1.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S12);
                         K8055.ClearDigitalChannel(S21);
+                        K8055.SetDigitalChannel(S22);
+                        K8055.SetDigitalChannel(S3);
+                        K8055.SetDigitalChannel(P1);
+                        K8055.SetDigitalChannel(P2);
                         if (yinyang)
                         {
                             K8055.SetDigitalChannel(S11);
@@ -128,17 +137,15 @@ namespace K8055_TESTE
                         {
                             K8055.ClearDigitalChannel(S11);
                             K8055.ClearDigitalChannel(P3);
-                            if (isWarning)
-                            {
-                                K8055.SetDigitalChannel(S12);
-                                K8055.SetDigitalChannel(S21);
-                            }
                         }
                     }
                     else if (state == 2)
                     {
                         state2.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S21);
+                        K8055.SetDigitalChannel(S3);
+                        K8055.SetDigitalChannel(P1);
+                        K8055.SetDigitalChannel(P2);
                         if (yinyang)
                         {
                             K8055.SetDigitalChannel(S22);
@@ -148,10 +155,6 @@ namespace K8055_TESTE
                         {
                             K8055.ClearDigitalChannel(S22);
                             K8055.ClearDigitalChannel(P3);
-                            if (isWarning)
-                            {
-                                K8055.SetDigitalChannel(S21);
-                            }
                         }
                     }
                     else if (state == 3)
@@ -159,18 +162,76 @@ namespace K8055_TESTE
                         state3.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S11);
                         K8055.ClearDigitalChannel(S3);
-                        if (isWarning && !yinyang)
-                        {
-                            K8055.SetDigitalChannel(S11);
-                            K8055.SetDigitalChannel(S3);
-                        }
+                        K8055.SetDigitalChannel(S12);
+                        K8055.SetDigitalChannel(S21);
+                        K8055.SetDigitalChannel(S22);
+                        K8055.SetDigitalChannel(P1);
+                        K8055.SetDigitalChannel(P2);
+                        K8055.SetDigitalChannel(P3);
                     }
-                    System.Threading.Thread.Sleep(333);
                     if (isInMaintenanceMode)
                     {
+                        System.Threading.Thread.Sleep(200);
                         K8055.ClearAllDigital();
-                        System.Threading.Thread.Sleep(333);
                     }
+                    else
+                    {
+                        if (P1Pressed)
+                        {
+                            int timediff = Convert.ToInt32((DateTime.Now - P1PressedAt).TotalMilliseconds);
+                            int[] blockedByP1 = new int[] { S11, S12, S21, S3};
+                            if (timediff > Convert.ToInt32(timer / 2))
+                            {
+                                P1Pressed = false;
+                                K8055.SetDigitalChannel(P1);
+                            }
+                            else
+                            {
+                                foreach (int light in blockedByP1)
+                                {
+                                    K8055.SetDigitalChannel(light);
+                                }
+                                K8055.ClearDigitalChannel(P1);
+                            }
+                        }
+                        if (P2Pressed)
+                        {
+                            int timediff = Convert.ToInt32((DateTime.Now - P2PressedAt).TotalMilliseconds);
+                            int[] blockedByP2 = new int[] { S12, S21, S22, S3 };
+                            if (timediff > Convert.ToInt32(timer / 2))
+                            {
+                                P2Pressed = false;
+                                K8055.SetDigitalChannel(P2);
+                            }
+                            else
+                            {
+                                foreach (int light in blockedByP2)
+                                {
+                                    K8055.SetDigitalChannel(light);
+                                }
+                                K8055.ClearDigitalChannel(P2);
+                            }
+                        }
+                        if (P3Pressed)
+                        {
+                            int timediff = Convert.ToInt32((DateTime.Now - P3PressedAt).TotalMilliseconds);
+                            int[] blockedByP3 = new int[] { S11, S22, S3 };
+                            if (timediff > Convert.ToInt32(timer / 2))
+                            {
+                                P3Pressed = false;
+                                K8055.SetDigitalChannel(P3);
+                            }
+                            else
+                            {
+                                foreach (int light in blockedByP3)
+                                {
+                                    K8055.SetDigitalChannel(light);
+                                }
+                                K8055.ClearDigitalChannel(P3);
+                            }
+                        }
+                    }
+                    System.Threading.Thread.Sleep(200);
                     yinyang = !yinyang;
                 }
             });
@@ -179,7 +240,6 @@ namespace K8055_TESTE
             {
                 while (true)
                 {
-                    isWarning = false;
                     if (isInMaintenanceMode)
                     {
                         state = 0;
@@ -191,17 +251,7 @@ namespace K8055_TESTE
                         state = 1;
                         D1 = false;
                     }
-                    for (int i = 0; i < 9; i++)
-                    {
-                        if (isInMaintenanceMode)
-                        {
-                            i = 8;
-                        }
-                        System.Threading.Thread.Sleep(timer / 10);
-                    }
-                    isWarning = true;
-                    System.Threading.Thread.Sleep(timer / 10);
-                    isWarning = false;
+                    System.Threading.Thread.Sleep(timer);
                 }
             });
             task2.Start();
@@ -240,23 +290,20 @@ namespace K8055_TESTE
 
         private void p1_Click(object sender, EventArgs e)
         {
-            // should turn off
-            // s1.1, s1.2, s2.1, s3
-            MessageBox.Show("On: P1 \n Off: s1.1, s1.2, s2.1, s3 ");
+            P1Pressed = true;
+            P1PressedAt = DateTime.Now;
         }
 
         private void p2_Click(object sender, EventArgs e)
         {
-            // should turn off
-            // s3, s2.1, s2.2, s1.2
-            MessageBox.Show("On: p1 \n Off: s3, s2.1, s2.2, s1.2");
+            P2Pressed = true;
+            P2PressedAt = DateTime.Now;
         }
 
         private void p3_Click(object sender, EventArgs e)
         {
-        // should turn off
-        // s3, s2.2, s1.
-        MessageBox.Show("On P3 \n Off: s3, s2.2, s1.1");
+            P3Pressed = true;
+            P3PressedAt = DateTime.Now;
         }
 
         private void d1_Click(object sender, EventArgs e)
