@@ -111,7 +111,10 @@ namespace K8055_TESTE
                     state1.BackColor = Color.Transparent;
                     state2.BackColor = Color.Transparent;
                     state3.BackColor = Color.Transparent;
-                    maintanceModePanel.BackColor = isInMaintenanceMode ? Color.White : Color.Transparent;
+                    state4.BackColor = Color.Transparent;
+                    state5.BackColor = Color.Transparent;
+                    state6.BackColor = Color.Transparent;
+
                     if (isInMaintenanceMode)
                     {
                         foreach (int light in allLights)
@@ -171,15 +174,28 @@ namespace K8055_TESTE
                     }
                     if (isInMaintenanceMode)
                     {
+                        state1.BackColor = Color.Transparent;
+                        state2.BackColor = Color.Transparent;
+                        state3.BackColor = Color.Transparent;
+                        state4.BackColor = Color.Transparent;
+                        state5.BackColor = Color.Transparent;
+                        state6.BackColor = Color.Transparent;
                         System.Threading.Thread.Sleep(200);
                         K8055.ClearAllDigital();
                     }
                     else
                     {
+
                         if (P1Pressed)
                         {
+                            state1.BackColor = Color.Transparent;
+                            state2.BackColor = Color.Transparent;
+                            state3.BackColor = Color.Transparent;
+                            state5.BackColor = Color.Transparent;
+                            state6.BackColor = Color.Transparent;
+                            state4.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P1PressedAt).TotalMilliseconds);
-                            int[] blockedByP1 = new int[] { S11, S12, S21, S3};
+                            int[] blockedByP1 = new int[] { S11, S12, S21, S3, P2, P3};
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P1Pressed = false;
@@ -196,8 +212,14 @@ namespace K8055_TESTE
                         }
                         if (P2Pressed)
                         {
+                            state1.BackColor = Color.Transparent;
+                            state2.BackColor = Color.Transparent;
+                            state3.BackColor = Color.Transparent;
+                            state4.BackColor = Color.Transparent;
+                            state6.BackColor = Color.Transparent;
+                            state5.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P2PressedAt).TotalMilliseconds);
-                            int[] blockedByP2 = new int[] { S12, S21, S22, S3 };
+                            int[] blockedByP2 = new int[] { S12, S21, S22, S3, P1, P3};
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P2Pressed = false;
@@ -214,8 +236,14 @@ namespace K8055_TESTE
                         }
                         if (P3Pressed)
                         {
+                            state1.BackColor = Color.Transparent;
+                            state2.BackColor = Color.Transparent;
+                            state3.BackColor = Color.Transparent;
+                            state4.BackColor = Color.Transparent;
+                            state5.BackColor = Color.Transparent;
+                            state6.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P3PressedAt).TotalMilliseconds);
-                            int[] blockedByP3 = new int[] { S11, S22, S3 };
+                            int[] blockedByP3 = new int[] { S11, S22, S3, P1, P2 };
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P3Pressed = false;
@@ -311,10 +339,9 @@ namespace K8055_TESTE
             D1 = true;
         }
 
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
 
-        }
+
+
     }
 
 
