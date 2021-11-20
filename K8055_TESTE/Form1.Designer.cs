@@ -234,6 +234,7 @@
             this.state1.Size = new System.Drawing.Size(226, 161);
             this.state1.TabIndex = 12;
             this.state1.TabStop = false;
+            this.state1.Text = "Fase 1";
             // 
             // label20
             // 
@@ -570,7 +571,7 @@
             this.label28.ForeColor = System.Drawing.Color.Green;
             this.label28.Location = new System.Drawing.Point(7, 102);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(109, 20);
+            this.label28.Size = new System.Drawing.Size(87, 16);
             this.label28.TabIndex = 7;
             this.label28.Text = "S2.2 -> Verde";
             // 
@@ -580,7 +581,7 @@
             this.label29.ForeColor = System.Drawing.Color.Red;
             this.label29.Location = new System.Drawing.Point(118, 82);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(123, 20);
+            this.label29.Size = new System.Drawing.Size(98, 16);
             this.label29.TabIndex = 6;
             this.label29.Text = "P3 -> Vermelho";
             // 
@@ -600,7 +601,7 @@
             this.label31.ForeColor = System.Drawing.Color.Green;
             this.label31.Location = new System.Drawing.Point(118, 39);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(100, 20);
+            this.label31.Size = new System.Drawing.Size(80, 16);
             this.label31.TabIndex = 4;
             this.label31.Text = " P1 -> Verde";
             // 
@@ -618,7 +619,7 @@
             this.label33.ForeColor = System.Drawing.Color.Red;
             this.label33.Location = new System.Drawing.Point(6, 82);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(135, 20);
+            this.label33.Size = new System.Drawing.Size(108, 16);
             this.label33.TabIndex = 2;
             this.label33.Text = "S2.1 -> Vermelho";
             // 
@@ -628,7 +629,7 @@
             this.label34.ForeColor = System.Drawing.Color.Red;
             this.label34.Location = new System.Drawing.Point(6, 60);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(135, 20);
+            this.label34.Size = new System.Drawing.Size(108, 16);
             this.label34.TabIndex = 1;
             this.label34.Text = "S1.2 -> Vermelho";
             // 
@@ -638,7 +639,7 @@
             this.label35.ForeColor = System.Drawing.Color.Red;
             this.label35.Location = new System.Drawing.Point(6, 39);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(126, 20);
+            this.label35.Size = new System.Drawing.Size(101, 16);
             this.label35.TabIndex = 0;
             this.label35.Text = "S1.1 - Vermelho";
             // 
@@ -686,7 +687,7 @@
             this.label38.ForeColor = System.Drawing.Color.Red;
             this.label38.Location = new System.Drawing.Point(118, 82);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(123, 20);
+            this.label38.Size = new System.Drawing.Size(98, 16);
             this.label38.TabIndex = 6;
             this.label38.Text = "P3 -> Vermelho";
             // 
@@ -696,7 +697,7 @@
             this.label39.ForeColor = System.Drawing.Color.Green;
             this.label39.Location = new System.Drawing.Point(118, 60);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(96, 20);
+            this.label39.Size = new System.Drawing.Size(77, 16);
             this.label39.TabIndex = 5;
             this.label39.Text = "P2 -> Verde";
             // 
@@ -724,7 +725,7 @@
             this.label42.ForeColor = System.Drawing.Color.Red;
             this.label42.Location = new System.Drawing.Point(6, 82);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(135, 20);
+            this.label42.Size = new System.Drawing.Size(108, 16);
             this.label42.TabIndex = 2;
             this.label42.Text = "S2.1 -> Vermelho";
             // 
@@ -734,7 +735,7 @@
             this.label43.ForeColor = System.Drawing.Color.Red;
             this.label43.Location = new System.Drawing.Point(6, 60);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(135, 20);
+            this.label43.Size = new System.Drawing.Size(108, 16);
             this.label43.TabIndex = 1;
             this.label43.Text = "S1.2 -> Vermelho";
             // 
@@ -744,7 +745,7 @@
             this.label44.ForeColor = System.Drawing.Color.Green;
             this.label44.Location = new System.Drawing.Point(6, 39);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(100, 20);
+            this.label44.Size = new System.Drawing.Size(80, 16);
             this.label44.TabIndex = 0;
             this.label44.Text = "S1.1 - Verde";
             // 
@@ -792,7 +793,7 @@
             this.label47.ForeColor = System.Drawing.Color.Green;
             this.label47.Location = new System.Drawing.Point(118, 82);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(96, 20);
+            this.label47.Size = new System.Drawing.Size(77, 16);
             this.label47.TabIndex = 6;
             this.label47.Text = "P3 -> Verde";
             // 
@@ -850,7 +851,7 @@
             this.label53.ForeColor = System.Drawing.Color.Red;
             this.label53.Location = new System.Drawing.Point(6, 39);
             this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(126, 20);
+            this.label53.Size = new System.Drawing.Size(101, 16);
             this.label53.TabIndex = 0;
             this.label53.Text = "S1.1 - Vermelho";
             // 
