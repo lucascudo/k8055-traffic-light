@@ -124,13 +124,14 @@ namespace K8055_TESTE
                     }
                     if (state == 1)
                     {
+                        int[] blockedByState1 = new int[] { S22, S3, P1, P2 };
                         state1.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S12);
                         K8055.ClearDigitalChannel(S21);
-                        K8055.SetDigitalChannel(S22);
-                        K8055.SetDigitalChannel(S3);
-                        K8055.SetDigitalChannel(P1);
-                        K8055.SetDigitalChannel(P2);
+                        foreach (int light in blockedByState1)
+                        {
+                            K8055.SetDigitalChannel(light);
+                        }
                         if (yinyang)
                         {
                             K8055.SetDigitalChannel(S11);
@@ -144,11 +145,13 @@ namespace K8055_TESTE
                     }
                     else if (state == 2)
                     {
+                        int[] blockedByState2 = new int[] { S11, S12, S3, P1, P2 };
                         state2.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S21);
-                        K8055.SetDigitalChannel(S3);
-                        K8055.SetDigitalChannel(P1);
-                        K8055.SetDigitalChannel(P2);
+                        foreach (int light in blockedByState2)
+                        {
+                            K8055.SetDigitalChannel(light);
+                        }
                         if (yinyang)
                         {
                             K8055.SetDigitalChannel(S22);
@@ -162,15 +165,14 @@ namespace K8055_TESTE
                     }
                     else if (state == 3)
                     {
+                        int[] blockedByState3 = new int[] { S12, S21, S22, P1, P2, P3};
                         state3.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S11);
                         K8055.ClearDigitalChannel(S3);
-                        K8055.SetDigitalChannel(S12);
-                        K8055.SetDigitalChannel(S21);
-                        K8055.SetDigitalChannel(S22);
-                        K8055.SetDigitalChannel(P1);
-                        K8055.SetDigitalChannel(P2);
-                        K8055.SetDigitalChannel(P3);
+                        foreach (int light in blockedByState3)
+                        {
+                            K8055.SetDigitalChannel(light);
+                        }
                     }
                     if (isInMaintenanceMode)
                     {
@@ -184,7 +186,7 @@ namespace K8055_TESTE
                         {
                             state4.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P1PressedAt).TotalMilliseconds);
-                            int[] blockedByP1 = new int[] { S11, S12, S21, S3, P2, P3};
+                            int[] blockedByP1 = new int[] { S11, S12, S21, S3 };
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P1Pressed = false;
@@ -203,7 +205,7 @@ namespace K8055_TESTE
                         {
                             state5.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P2PressedAt).TotalMilliseconds);
-                            int[] blockedByP2 = new int[] { S12, S21, S22, S3, P1, P3};
+                            int[] blockedByP2 = new int[] { S12, S21, S22, S3 };
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P2Pressed = false;
@@ -222,7 +224,7 @@ namespace K8055_TESTE
                         {
                             state6.BackColor = Color.White;
                             int timediff = Convert.ToInt32((DateTime.Now - P3PressedAt).TotalMilliseconds);
-                            int[] blockedByP3 = new int[] { S11, S22, S3, P1, P2 };
+                            int[] blockedByP3 = new int[] { S11, S22, S3 };
                             if (timediff > Convert.ToInt32(timer / 2))
                             {
                                 P3Pressed = false;
