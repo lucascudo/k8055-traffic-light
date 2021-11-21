@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
@@ -13,6 +14,8 @@ namespace K8055_TESTE
         public Form1()
         {
             InitializeComponent();
+            schedule_Timer12AM();
+            schedule_Timer4AM();
         }
 
         public static class K8055
@@ -78,6 +81,59 @@ namespace K8055_TESTE
             public static extern void SetCounterDebounceTime(int CounterNr, int DebounceTime);
         }
 
+        private System.Timers.Timer clock12AM;
+        private  System.Timers.Timer clock4AM;
+
+        private void schedule_Timer12AM()
+        {
+            Console.WriteLine("### 12 AM Timer Started ###");
+
+            DateTime nowTime = DateTime.Now;
+            DateTime scheduledTime = new DateTime(nowTime.Year, nowTime.Month, nowTime.Day, 0, 0, 0, 0); //Specify your scheduled time HH,MM,SS [12am]
+            if (nowTime > scheduledTime)
+            {
+                scheduledTime = scheduledTime.AddDays(1);
+            }
+
+            double tickTime = (double)(scheduledTime - DateTime.Now).TotalMilliseconds;
+            clock12AM = new System.Timers.Timer(tickTime);
+            clock12AM.Elapsed += new ElapsedEventHandler(timer_Elapsed12AM);
+            clock12AM.Start();
+        }
+
+        private void timer_Elapsed12AM(object sender, ElapsedEventArgs e)
+        {
+            isInMaintenanceMode = true;
+            Console.WriteLine("### 12 AM Timer Stopped ### \n");
+            clock12AM.Stop();
+            schedule_Timer12AM();
+        }
+
+        private void schedule_Timer4AM()
+        {
+            Console.WriteLine("### 4 AM Timer Started ###");
+
+            DateTime nowTime = DateTime.Now;
+            DateTime scheduledTime = new DateTime(nowTime.Year, nowTime.Month, nowTime.Day, 4, 0, 0, 0); //Specify your scheduled time HH,MM,SS [4am]
+            if (nowTime > scheduledTime)
+            {
+                scheduledTime = scheduledTime.AddDays(1);
+            }
+
+            double tickTime = (double)(scheduledTime - DateTime.Now).TotalMilliseconds;
+            clock4AM = new System.Timers.Timer(tickTime);
+            clock4AM.Elapsed += new ElapsedEventHandler(timer_Elapsed4AM);
+            clock4AM.Start();
+        }
+
+        private void timer_Elapsed4AM(object sender, ElapsedEventArgs e)
+        {
+            isInMaintenanceMode = false;
+            Console.WriteLine("### 4 AM Timer Stopped ### \n");
+            clock4AM.Stop();
+            schedule_Timer4AM();
+        }
+
         private bool isInMaintenanceMode = true;
         private bool yinyang = false;
         private bool D1 = false;
@@ -102,7 +158,7 @@ namespace K8055_TESTE
         private void Form1_Load(object sender, EventArgs e)
         {
             K8055.OpenDevice(0);
-            
+
             Task task1 = new Task(delegate
             {
                 int[] allLights = new int[] { S11, S12, S21, S22, S3, P1, P2, P3 };
@@ -117,6 +173,7 @@ namespace K8055_TESTE
 
                     if (isInMaintenanceMode)
                     {
+                        state = 0;
                         foreach (int light in allLights)
                         {
                             K8055.SetDigitalChannel(light);
@@ -124,52 +181,56 @@ namespace K8055_TESTE
                     }
                     if (state == 1)
                     {
-                        int[] blockedByState1 = new int[] { S22, S3, P1, P2 };
+                        int[] redLights = new int[] { S22, S3, P1, P2 };
+                        int[] yellowLights = new int[] { S11, P3 };
                         state1.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S12);
                         K8055.ClearDigitalChannel(S21);
-                        foreach (int light in blockedByState1)
+                        foreach (int light in redLights)
                         {
                             K8055.SetDigitalChannel(light);
                         }
-                        if (yinyang)
+                        foreach (int light in yellowLights)
                         {
-                            K8055.SetDigitalChannel(S11);
-                            K8055.SetDigitalChannel(P3);
-                        }
-                        else
-                        {
-                            K8055.ClearDigitalChannel(S11);
-                            K8055.ClearDigitalChannel(P3);
+                            if (yinyang)
+                            {
+                                K8055.SetDigitalChannel(light);
+                            }
+                            else
+                            {
+                                K8055.ClearDigitalChannel(light);
+                            }
                         }
                     }
                     else if (state == 2)
                     {
-                        int[] blockedByState2 = new int[] { S11, S12, S3, P1, P2 };
+                        int[] redLights = new int[] { S11, S12, S3, P1, P2 };
+                        int[] yellowLights = new int[] { S22, P3 };
                         state2.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S21);
-                        foreach (int light in blockedByState2)
+                        foreach (int light in redLights)
                         {
                             K8055.SetDigitalChannel(light);
                         }
-                        if (yinyang)
+                        foreach (int light in yellowLights)
                         {
-                            K8055.SetDigitalChannel(S22);
-                            K8055.SetDigitalChannel(P3);
-                        }
-                        else
-                        {
-                            K8055.ClearDigitalChannel(S22);
-                            K8055.ClearDigitalChannel(P3);
+                            if (yinyang)
+                            {
+                                K8055.SetDigitalChannel(light);
+                            }
+                            else
+                            {
+                                K8055.ClearDigitalChannel(light);
+                            }
                         }
                     }
                     else if (state == 3)
                     {
-                        int[] blockedByState3 = new int[] { S12, S21, S22, P1, P2, P3};
+                        int[] redLights = new int[] { S12, S21, S22, P1, P2, P3 };
                         state3.BackColor = Color.White;
                         K8055.ClearDigitalChannel(S11);
                         K8055.ClearDigitalChannel(S3);
-                        foreach (int light in blockedByState3)
+                        foreach (int light in redLights)
                         {
                             K8055.SetDigitalChannel(light);
                         }
@@ -181,7 +242,10 @@ namespace K8055_TESTE
                     }
                     else
                     {
-
+                        if (K8055.ReadAnalogChannel(1) > 0)
+                        {
+                            D1 = true;
+                        }
                         if (P1Pressed)
                         {
                             state4.BackColor = Color.White;
@@ -251,7 +315,6 @@ namespace K8055_TESTE
                 {
                     if (isInMaintenanceMode)
                     {
-                        state = 0;
                         continue;
                     }
                     state++;
